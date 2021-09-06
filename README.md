@@ -12,3 +12,4 @@ Includes:
 - Decorator
 - Functionality (add/remove/edit users)
 - Lockout if incorrent password
+- Logging
