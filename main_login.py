@@ -4,15 +4,28 @@ from time import sleep
 from user_create import User, Admin
 from getpass import getpass
 from itertools import count
+import logging
 
-# Prompt: Who do you want to login as? - Supply Username and Password                                              -Done
-# Check the DB for associates username and password, also check if that user is an admin
-# If a match, then we login as that user and supply a little text saying "logged in as {user}"
-# If no match. Counter to track failed attempts. At 5 attempts or w/e we lock out                                  -Done
 
-# If we login as admin, we have access to change other's password and information
-# If we do not login as admin, that ability is restricted
+# Prompt: Who do you want to login as? - Supply Username and Password                                             - Done
+# If a match, then we login as that user and supply a little text saying "logged in as {user}"                    - Done
+# If no match. Counter to track failed attempts. At 5 attempts or w/e we lock out                                 - Done
 
+
+####### Logging Setup ########
+logger = logging.getLogger(__name__)                             # This creates a logger with the name of the module
+file_handler_for_debug = logging.FileHandler('logdebug.txt')     # We make a new handler that points to a file
+file_handler_for_warning = logging.FileHandler('logwarning.txt') # We made a new handler for warnings
+logger.addHandler(file_handler_for_debug)                        # Add that handler to our logger
+logger.addHandler(file_handler_for_warning)
+
+#### Formatting our file Handler and setting log levels ####
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s:%(name)s')
+file_handler_for_debug.setFormatter(formatter)
+file_handler_for_warning.setFormatter(formatter)
+file_handler_for_warning.setLevel(logging.WARNING)
+file_handler_for_debug.setLevel(logging.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 
 conn = sqlite3.connect("users.db")
@@ -37,12 +50,16 @@ def main():
         pwd = bytes(getpass("Please enter your password: "), encoding="utf-8")
         if check_password(user,pwd):
             print("Correct password")
+
+            logger.debug(f"User {user} successfully logged in")
             login(user)
 
         print("Password incorrect. Try again: ")
+        logger.warning(f"User {user} inputted wrong password")
 
     #Lockout
     print("Nah man, you're gettin' locked for 5 min sry lol")
+    logger.warning(f"User {user} has been locked out after 5 failed login attempts")
     sleep(300)
 
 def pull_username_list():
@@ -62,8 +79,8 @@ def check_password(user,pwd):
     return False
 
 def login(user):
-    pass
-
+    print(f"You are logged in as: {user}")
+    exit()
 
 if __name__ == '__main__':
     main()

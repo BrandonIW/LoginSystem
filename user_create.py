@@ -4,19 +4,13 @@ The idea here is make a login system that just prints everything to console.
 What I want to be able to do:
 1) Create a database that stores username/password combinations                                                   - Done
 2) Passwords must be hashed                                                                                       - Done
-3) When I login as a specific user, I get access to that user's details. i.e. their name, email, salary etc.
-4) I should be able to change my own password when I login as that user, or as the admin
-5) Ability to view and change my data with getters/setters, or can also do this if I login as admin
-6) Should be able to delete a user as an admin
-7) Should be able to create new users as an admin
 8) Monitor failed password attempts and lock out the user?                                                        - Done
 9) Input validation when creating a password (password complexity for Nums, Letters, length, symbols etc)         - Done
-11) Logging system to log failed logins and successful logins
+11) Logging system to log failed logins and successful logins                                                     - Done
 12) Create setters/getters to change user information                                                             - Done
 '''
 
 # TODO: Stop duplication of users being made in the DB,
-# TODO: Hashing a password with bcrypt is not replicable. Different hash each time
 
 import sqlite3
 import re
@@ -211,7 +205,7 @@ class Admin(User):
 
         # Use context manager
         with conn:
-            sql_cursor.execute("INSERT INTO employees VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            sql_cursor.execute("INSERT INTO employees VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                            (self.first_name, self.last_name, self._full_name, self._password,
                             self._username, self._email, self._salary, "TRUE", self._salt))
 
@@ -226,5 +220,7 @@ class Admin(User):
 
 #User1 = User("Brandon", "Wittet", 5000)
 #User2 = User("Mary", "Jane", 6840)
+#User3 = User("Joe", "Blow", 2345)
+#Admin1 = Admin("Dick", "Butt", 5000)
 
 
